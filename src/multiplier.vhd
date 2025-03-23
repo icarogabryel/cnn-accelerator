@@ -29,10 +29,10 @@ architecture behavior of multiplier is
 
     component adder is
         port (
-            a : in std_logic_vector(39 downto 0);
-            b : in std_logic_vector(39 downto 0);
-            c : in std_logic_vector(39 downto 0);
-            d : in std_logic_vector(39 downto 0);
+            a   : in std_logic_vector(39 downto 0);
+            b   : in std_logic_vector(39 downto 0);
+            c   : in std_logic_vector(39 downto 0);
+            d   : in std_logic_vector(39 downto 0);
             sum : out std_logic_vector(39 downto 0)
         );
 
