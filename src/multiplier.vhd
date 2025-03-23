@@ -9,9 +9,9 @@ entity multiplier is
         product : out std_logic_vector(39 downto 0)
     );
 
-end entity multiplier;
+end entity;
 
-architecture behave of multiplier is
+architecture behavior of multiplier is
     signal blk_0 : std_logic_vector(2 downto 0) := mtpr(1 downto 0) & '0'; -- Add a zero on the right
     signal blk_1 : std_logic_vector(2 downto 0) := mtpr(3 downto 1);
     signal blk_2 : std_logic_vector(2 downto 0) := mtpr(5 downto 3);
@@ -26,6 +26,17 @@ architecture behave of multiplier is
     signal partial_1 : std_logic_vector(33 downto 0);
     signal partial_2 : std_logic_vector(33 downto 0);
     signal partial_3 : std_logic_vector(33 downto 0);
+
+    component adder is
+        port (
+            a : in std_logic_vector(39 downto 0);
+            b : in std_logic_vector(39 downto 0);
+            c : in std_logic_vector(39 downto 0);
+            d : in std_logic_vector(39 downto 0);
+            sum : out std_logic_vector(39 downto 0)
+        );
+
+    end component;
 
 begin
     with blk_0 select
@@ -67,5 +78,14 @@ begin
                      mtpcd_times_neg_1 when "101",
                      mtpcd_times_neg_1 when "110",
                      (others => '0')   when others;
+
+    adder_inst : adder
+        port map (
+            a => (others => partial_0(33)) & partial_0,
+            b => (others => partial_1(33)) & partial_1 & "00",
+            c => (others => partial_2(33)) & partial_2 & "0000",
+            d => (others => partial_3(33)) & partial_3 & "000000",
+            sum => product
+        );
 
 end architecture;
