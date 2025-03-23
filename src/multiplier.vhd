@@ -82,9 +82,9 @@ begin
     adder_inst : adder
         port map (
             a => (others => partial_0(33)) & partial_0,
-            b => (others => partial_1(33)) & partial_1 & "00",
-            c => (others => partial_2(33)) & partial_2 & "0000",
-            d => (others => partial_3(33)) & partial_3 & "000000",
+            b => (others => partial_1(33)) & partial_1 & "00",      -- Shift left by 2^1
+            c => (others => partial_2(33)) & partial_2 & "0000",    -- Shift left by 2^2
+            d => (others => partial_3(33)) & partial_3 & "000000",  -- Shift left by 2^3
             sum => product
         );
 
