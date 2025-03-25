@@ -24,9 +24,9 @@ architecture behavior of adder is
         );
     end component compressor;
 
-    signal carry_bus : std_logic_vector(39 downto 0) := (others => '0');
-    signal c_out_bus : std_logic_vector(39 downto 0) := (others => '0');
-    signal p_carry   : std_logic_vector(39 downto 0) := (others => '0'); -- carry propagation
+    signal carry_bus : std_logic_vector(39 downto 0);
+    signal c_out_bus : std_logic_vector(39 downto 0);
+    signal p_carry   : std_logic_vector(38 downto 0); -- propagation carry
 
 begin
     carry_bus(0) <= '0';
