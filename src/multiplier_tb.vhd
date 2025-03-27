@@ -31,6 +31,10 @@ begin
         mtpcd <= "00000000000000010000000000000000";
         wait for 10 ns;
 
+        mtpr  <= "1111110";
+        mtpcd <= "11111111111111111111111111111010";
+        wait for 10 ns;
+
         wait;
 
     end process;
