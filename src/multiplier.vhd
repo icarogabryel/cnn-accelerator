@@ -47,11 +47,11 @@ begin
     blk_0 <= mtpr(1 downto 0) & '0';    -- Add a zero on the right
     blk_1 <= mtpr(3 downto 1);
     blk_2 <= mtpr(5 downto 3);
-    blk_3 <= '0' & mtpr(6 downto 5);    -- Add a zero because the block is 3 bits
+    blk_3 <= mtpr(6) & mtpr(6 downto 5);    -- Sign extend to fit 3 bits
 
     mtpcd_times_1     <= mtpcd(31) & mtpcd(31 downto 0); -- Extend the sign bit
     mtpcd_times_2     <= mtpcd(31 downto 0) & '0'; -- Shift left by 1
-    mtpcd_times_neg_1 <= std_logic_vector(signed(not mtpcd_times_1) + 1); -- Two's complement
+    mtpcd_times_neg_1 <= std_logic_vector(-signed(mtpcd_times_1));
     mtpcd_times_neg_2 <= mtpcd_times_neg_1(31 downto 0) & '0'; -- Shift left by 1
 
     with blk_0 select pre_partial_0 <=
