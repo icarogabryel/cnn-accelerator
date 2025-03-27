@@ -55,44 +55,44 @@ begin
     mtpcd_times_neg_2 <= mtpcd_times_neg_1(31 downto 0) & '0'; -- Shift left by 1
 
     with blk_0 select pre_partial_0 <=
-        (others => '0') when "000",
-        mtpcd_times_1 when "001",
-        mtpcd_times_1 when "010",
-        mtpcd_times_2 when "011",
+        (others => '0')   when "000",
+        mtpcd_times_1     when "001",
+        mtpcd_times_1     when "010",
+        mtpcd_times_2     when "011",
         mtpcd_times_neg_2 when "100",
         mtpcd_times_neg_1 when "101",
         mtpcd_times_neg_1 when "110",
-        (others => '0') when others;
+        (others => '0')   when others;
 
     with blk_1 select pre_partial_1 <=
-        (others => '0') when "000",
-        mtpcd_times_1 when "001",
-        mtpcd_times_1 when "010",
-        mtpcd_times_2 when "011",
+        (others => '0')   when "000",
+        mtpcd_times_1     when "001",
+        mtpcd_times_1     when "010",
+        mtpcd_times_2     when "011",
         mtpcd_times_neg_2 when "100",
         mtpcd_times_neg_1 when "101",
         mtpcd_times_neg_1 when "110",
-        (others => '0') when others;
+        (others => '0')   when others;
 
     with blk_2 select pre_partial_2 <=
-        (others => '0') when "000",
-        mtpcd_times_1 when "001",
-        mtpcd_times_1 when "010",
-        mtpcd_times_2 when "011",
+        (others => '0')   when "000",
+        mtpcd_times_1     when "001",
+        mtpcd_times_1     when "010",
+        mtpcd_times_2     when "011",
         mtpcd_times_neg_2 when "100",
         mtpcd_times_neg_1 when "101",
         mtpcd_times_neg_1 when "110",
-        (others => '0') when others;
+        (others => '0')   when others;
 
     with blk_3 select pre_partial_3 <=
-        (others => '0') when "000",
-        mtpcd_times_1 when "001",
-        mtpcd_times_1 when "010",
-        mtpcd_times_2 when "011",
+        (others => '0')   when "000",
+        mtpcd_times_1     when "001",
+        mtpcd_times_1     when "010",
+        mtpcd_times_2     when "011",
         mtpcd_times_neg_2 when "100",
         mtpcd_times_neg_1 when "101",
         mtpcd_times_neg_1 when "110",
-        (others => '0') when others;
+        (others => '0')   when others;
 
     partial_0 <= pre_partial_0(32) & pre_partial_0(32) & pre_partial_0(32) & pre_partial_0(32) & pre_partial_0(32) & pre_partial_0(32) & pre_partial_0(32 downto 0);
     partial_1 <= pre_partial_1(32) & pre_partial_1(32) & pre_partial_1(32) & pre_partial_1(32) & pre_partial_1(32 downto 0) & "00"; -- Shift left by 2^1
