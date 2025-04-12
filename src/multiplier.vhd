@@ -4,14 +4,17 @@ use ieee.numeric_std.all;
 
 entity multiplier is
     port(
-        mtpr    : in  std_logic_vector(6 downto 0);
-        mtpcd   : in  std_logic_vector(31 downto 0);
-        product : out std_logic_vector(38 downto 0)
+        clk, rst : in  std_logic;
+        mtpr     : in  std_logic_vector(6 downto 0);
+        mtpcd    : in  std_logic_vector(31 downto 0);
+        product  : out std_logic_vector(38 downto 0)
     );
 
 end entity;
 
 architecture behavior of multiplier is
+    type reg_bank_type is array(0 to 3) of std_logic_vector(32 downto 0);
+
     signal blk_0 : std_logic_vector(2 downto 0);
     signal blk_1 : std_logic_vector(2 downto 0);
     signal blk_2 : std_logic_vector(2 downto 0);
@@ -26,6 +29,8 @@ architecture behavior of multiplier is
     signal pre_partial_1 : std_logic_vector(32 downto 0);
     signal pre_partial_2 : std_logic_vector(32 downto 0);
     signal pre_partial_3 : std_logic_vector(32 downto 0);
+
+    signal reg_bank : reg_bank_type;
 
     signal partial_0 : std_logic_vector(38 downto 0);
     signal partial_1 : std_logic_vector(38 downto 0);
@@ -94,10 +99,27 @@ begin
         mtpcd_times_neg_1 when "110",
         (others => '0')   when others;
 
-    partial_0 <= pre_partial_0(32) & pre_partial_0(32) & pre_partial_0(32) & pre_partial_0(32) & pre_partial_0(32) & pre_partial_0(32) & pre_partial_0(32 downto 0);
-    partial_1 <= pre_partial_1(32) & pre_partial_1(32) & pre_partial_1(32) & pre_partial_1(32) & pre_partial_1(32 downto 0) & "00"; -- Shift left by 2^1
-    partial_2 <= pre_partial_2(32) & pre_partial_2(32) & pre_partial_2(32 downto 0) & "0000"; -- Shift left by 2^2
-    partial_3 <= pre_partial_3(32 downto 0) & "000000"; -- Shift left by 2^3
+    write_rb : process(clk, rst) is
+    begin
+        if rst = '1' then
+            reg_bank(0) <= (others => '0');
+            reg_bank(1) <= (others => '0');
+            reg_bank(2) <= (others => '0');
+            reg_bank(3) <= (others => '0');
+
+        elsif rising_edge(clk) then
+            reg_bank(0) <= pre_partial_0;
+            reg_bank(1) <= pre_partial_1;
+            reg_bank(2) <= pre_partial_2;
+            reg_bank(3) <= pre_partial_3;
+
+        end if;
+    end process write_rb;
+
+    partial_0 <= reg_bank(0)(32) & reg_bank(0)(32) & reg_bank(0)(32) & reg_bank(0)(32) & reg_bank(0)(32) & reg_bank(0)(32) & reg_bank(0)(32 downto 0);
+    partial_1 <= reg_bank(1)(32) & reg_bank(1)(32) & reg_bank(1)(32) & reg_bank(1)(32) & reg_bank(1)(32 downto 0) & "00"; -- Shift left by 2^1
+    partial_2 <= reg_bank(2)(32) & reg_bank(2)(32) & reg_bank(2)(32 downto 0) & "0000"; -- Shift left by 2^2
+    partial_3 <= reg_bank(3)(32 downto 0) & "000000"; -- Shift left by 2^3
 
     adder_inst : adder
         port map(
