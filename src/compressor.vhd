@@ -9,7 +9,6 @@ entity compressor is
         carry          : out std_logic;
         sum            : out std_logic
     );
-
 end entity;
 
 architecture behavior of compressor is
@@ -21,5 +20,4 @@ begin
 
     sum   <= i_sum xor b3 xor c_in;
     c_out <= (i_sum and b3) or (i_sum and c_in) or (b3 and c_in);
-
 end behavior;
