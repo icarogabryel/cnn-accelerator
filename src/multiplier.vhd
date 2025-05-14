@@ -57,7 +57,7 @@ begin
     mtpcd_times_1     <= mtpcd(7) & mtpcd(7 downto 0);             -- Extend the sign bit
     mtpcd_times_2     <= mtpcd(7 downto 0) & '0';                  -- Shift left by 1
     mtpcd_times_neg_1 <= std_logic_vector(-signed(mtpcd_times_1)); -- Negate the value
-    mtpcd_times_neg_2 <= mtpcd(7 downto 0) & '0';                  -- Shift left by 1
+    mtpcd_times_neg_2 <= mtpcd_times_neg_1(7 downto 0) & '0';      -- Shift left by 1
 
     -- Find the partial products
     with blk_0 select partial_0 <=
