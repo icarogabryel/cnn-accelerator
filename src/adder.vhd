@@ -4,13 +4,12 @@ use ieee.numeric_std.all;
 
 entity adder is
     port(
-        a   : in  std_logic_vector(38 downto 0);
-        b   : in  std_logic_vector(38 downto 0);
-        c   : in  std_logic_vector(38 downto 0);
-        d   : in  std_logic_vector(38 downto 0);
-        sum : out std_logic_vector(38 downto 0)
+        a   : in  std_logic_vector(15 downto 0);
+        b   : in  std_logic_vector(15 downto 0);
+        c   : in  std_logic_vector(15 downto 0);
+        d   : in  std_logic_vector(15 downto 0);
+        sum : out std_logic_vector(15 downto 0)
     );
-
 end entity;
 
 architecture behavior of adder is
@@ -24,15 +23,15 @@ architecture behavior of adder is
         );
     end component compressor;
 
-    signal carry_bus : std_logic_vector(39 downto 0);
-    signal c_out_bus : std_logic_vector(39 downto 0);
-    signal p_carry   : std_logic_vector(38 downto 0); -- propagation carry
+    signal carry_bus : std_logic_vector(16 downto 0);
+    signal c_out_bus : std_logic_vector(16 downto 0);
+    signal p_carry   : std_logic_vector(15 downto 0); -- propagation carry
 
 begin
     carry_bus(0) <= '0';
     c_out_bus(0) <= '0';
 
-    compressor_gen : for i in 0 to 38 generate
+    compressor_gen : for i in 0 to 15 generate
         p_carry(i) <= carry_bus(i) or c_out_bus(i);
 
         compressor_inst : compressor
@@ -46,7 +45,5 @@ begin
                 carry => carry_bus(i + 1),
                 sum   => sum(i)
             );
-
     end generate compressor_gen;
-
 end architecture behavior;
