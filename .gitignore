@@ -1,4 +1,10 @@
+# GHDL
 work-obj93.cf
+
+# Sigasi project
 .settings/
 .library_mapping.xml
 .project
+
+# VS Code
+.vscode/
