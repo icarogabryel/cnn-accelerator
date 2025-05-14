@@ -6,9 +6,9 @@ entity multiplier_tb is
 end;
 
 architecture behavior of multiplier_tb is
-    signal clk, rst   : std_logic;
-    signal clk_period : time    := 10 ns;
-    signal clk_count  : integer := 0;
+    signal clk, rst     : std_logic;
+    constant clk_period : time    := 10 ns;
+    signal clk_count    : integer := 0;
 
     signal mtpr  : std_logic_vector(7 downto 0);
     signal mtpcd : std_logic_vector(7 downto 0);
