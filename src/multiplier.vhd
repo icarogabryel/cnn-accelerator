@@ -38,11 +38,11 @@ architecture behavior of multiplier is
 
     component adder is
         port(
-            a   : in  std_logic_vector(38 downto 0);
-            b   : in  std_logic_vector(38 downto 0);
-            c   : in  std_logic_vector(38 downto 0);
-            d   : in  std_logic_vector(38 downto 0);
-            sum : out std_logic_vector(38 downto 0)
+            a   : in  std_logic_vector(15 downto 0);
+            b   : in  std_logic_vector(15 downto 0);
+            c   : in  std_logic_vector(15 downto 0);
+            d   : in  std_logic_vector(15 downto 0);
+            sum : out std_logic_vector(15 downto 0)
         );
     end component;
 
@@ -100,6 +100,7 @@ begin
         mtpcd_times_neg_1 when "110",
         (others => '0')   when others;
 
+    -- Write the partial products into the register bank
     write_rb : process(clk, rst) is
     begin
         if rst = '1' then
@@ -108,18 +109,20 @@ begin
             reg_bank(2) <= (others => '0');
             reg_bank(3) <= (others => '0');
         elsif rising_edge(clk) then
-            reg_bank(0) <= x_partial_0;
-            reg_bank(1) <= x_partial_1;
-            reg_bank(2) <= x_partial_1;
-            reg_bank(3) <= x_partial_1;
+            reg_bank(0) <= partial_0;
+            reg_bank(1) <= partial_1;
+            reg_bank(2) <= partial_2;
+            reg_bank(3) <= partial_3;
         end if;
     end process write_rb;
 
+    -- Extend the partial products to 16 bits for the adder
     x_partial_0 <= reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8 downto 0); -- No Shift
     x_partial_1 <= reg_bank(1)(8) & reg_bank(1)(8) & reg_bank(1)(8) & reg_bank(1)(8) & reg_bank(1)(8) & reg_bank(1)(8 downto 0) & "00";                            -- Shift left by 2^1
     x_partial_2 <= reg_bank(2)(8) & reg_bank(2)(8) & reg_bank(2)(8) & reg_bank(2)(8 downto 0) & "0000";                                                            -- Shift left by 2^2
     x_partial_3 <= reg_bank(3)(8) & reg_bank(3)(8 downto 0) & "000000";                                                                                            -- Shift left by 2^3
 
+    -- Add the partial products
     adder_inst : adder
         port map(
             a   => x_partial_0,
