@@ -41,6 +41,11 @@ begin
         clk       <= '1';
         clk_count <= clk_count + 1;
         wait for clk_period / 2;
+
+        if clk_count = 10 then
+            assert false report "Test completed" severity note;
+            wait;
+        end if;
     end process clk_process;
 
     rst_process : process
@@ -62,28 +67,27 @@ begin
         mtpr  <= std_logic_vector(to_signed(8, 8));
         mtpcd <= std_logic_vector(to_signed(2, 8));
 
-        assert prod = std_logic_vector(to_signed(16, 16));
+        assert prod /= std_logic_vector(to_signed(16, 16)) report "First test failed" severity error;
         wait for 10 ns;
 
         mtpr  <= std_logic_vector(to_signed(-5, 8));
         mtpcd <= std_logic_vector(to_signed(3, 8));
 
-        assert prod = std_logic_vector(to_signed(-15, 16));
+        assert prod /= std_logic_vector(to_signed(-15, 16)) report "Second test failed" severity error;
         wait for 10 ns;
 
         mtpr  <= std_logic_vector(to_signed(-2, 8));
         mtpcd <= std_logic_vector(to_signed(-5, 8));
 
-        assert prod = std_logic_vector(to_signed(10, 16));
+        assert prod /= std_logic_vector(to_signed(10, 16)) report "Third test failed" severity error;
         wait for 10 ns;
 
         mtpr  <= (others => '0');
         mtpcd <= (others => '0');
 
-        assert prod = (others => '0');
+        assert prod /= std_logic_vector(to_signed(0, 16)) report "Fourth test failed" severity error;
         wait for 10 ns;
 
-        assert false report "Test completed" severity note;
         wait;
     end process;
 end architecture;
