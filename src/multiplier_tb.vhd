@@ -7,8 +7,8 @@ end;
 
 architecture behavior of multiplier_tb is
     signal clk, rst     : std_logic;
-    constant clk_period : time    := 10 ns;
     signal clk_count    : integer := 0;
+    constant clk_period : time    := 10 ns;
 
     signal mtpr  : std_logic_vector(7 downto 0);
     signal mtpcd : std_logic_vector(7 downto 0);
@@ -64,29 +64,23 @@ begin
     begin
         wait for 5 ns;
 
-        mtpr  <= std_logic_vector(to_signed(8, 8));
-        mtpcd <= std_logic_vector(to_signed(2, 8));
+        mtpr  <= std_logic_vector(to_signed(-128, 8));
+        mtpcd <= std_logic_vector(to_unsigned(255, 8));
 
         wait for 20 ns;
-        assert prod = std_logic_vector(to_signed(16, 16)) report "First test failed" severity error;
+        assert prod = std_logic_vector(to_signed(-32640, 16)) report "First test failed" severity error;
 
-        mtpr  <= std_logic_vector(to_signed(-5, 8));
-        mtpcd <= std_logic_vector(to_signed(3, 8));
-
-        wait for 20 ns;
-        assert prod = std_logic_vector(to_signed(-15, 16)) report "Second test failed" severity error;
-
-        mtpr  <= std_logic_vector(to_signed(-2, 8));
-        mtpcd <= std_logic_vector(to_signed(-5, 8));
+        mtpr  <= std_logic_vector(to_signed(127, 8));
+        mtpcd <= std_logic_vector(to_unsigned(255, 8));
 
         wait for 20 ns;
-        assert prod = std_logic_vector(to_signed(10, 16)) report "Third test failed" severity error;
+        assert prod = std_logic_vector(to_signed(32385, 16)) report "Second test failed" severity error;
 
         mtpr  <= (others => '0');
         mtpcd <= (others => '0');
 
         wait for 20 ns;
-        assert prod = std_logic_vector(to_signed(0, 16)) report "Fourth test failed" severity error;
+        assert prod = std_logic_vector(to_signed(0, 16)) report "Third test failed" severity error;
 
         wait;
     end process;

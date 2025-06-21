@@ -12,22 +12,24 @@ entity multiplier is
 end entity;
 
 architecture behavior of multiplier is
-    type reg_bank_type is array (0 to 3) of std_logic_vector(8 downto 0);
+    type reg_bank_type is array (0 to 3) of std_logic_vector(9 downto 0);
 
     signal blk_0 : std_logic_vector(2 downto 0);
     signal blk_1 : std_logic_vector(2 downto 0);
     signal blk_2 : std_logic_vector(2 downto 0);
     signal blk_3 : std_logic_vector(2 downto 0);
 
-    signal mtpcd_times_1     : std_logic_vector(8 downto 0);
-    signal mtpcd_times_2     : std_logic_vector(8 downto 0);
-    signal mtpcd_times_neg_1 : std_logic_vector(8 downto 0);
-    signal mtpcd_times_neg_2 : std_logic_vector(8 downto 0);
+    signal x_mtpcd : std_logic_vector(8 downto 0);
 
-    signal partial_0 : std_logic_vector(8 downto 0);
-    signal partial_1 : std_logic_vector(8 downto 0);
-    signal partial_2 : std_logic_vector(8 downto 0);
-    signal partial_3 : std_logic_vector(8 downto 0);
+    signal mtpcd_times_1     : std_logic_vector(9 downto 0);
+    signal mtpcd_times_2     : std_logic_vector(9 downto 0);
+    signal mtpcd_times_neg_1 : std_logic_vector(9 downto 0);
+    signal mtpcd_times_neg_2 : std_logic_vector(9 downto 0);
+
+    signal partial_0 : std_logic_vector(9 downto 0);
+    signal partial_1 : std_logic_vector(9 downto 0);
+    signal partial_2 : std_logic_vector(9 downto 0);
+    signal partial_3 : std_logic_vector(9 downto 0);
 
     signal reg_bank : reg_bank_type;
 
@@ -53,11 +55,13 @@ begin
     blk_2 <= mtpr(5 downto 3);
     blk_3 <= mtpr(7 downto 5);
 
-    -- Make possible partial products (9 bits to fit the times 2 multiplication)
-    mtpcd_times_1     <= mtpcd(7) & mtpcd(7 downto 0);             -- Extend the sign bit
-    mtpcd_times_2     <= mtpcd(7 downto 0) & '0';                  -- Shift left by 1
-    mtpcd_times_neg_1 <= std_logic_vector(-signed(mtpcd_times_1)); -- Negate the value
-    mtpcd_times_neg_2 <= mtpcd_times_neg_1(7 downto 0) & '0';      -- Shift left by 1
+    x_mtpcd <= '0' & mtpcd; -- Extend the multiplier to 9 bits
+
+    -- Make possible partial products (10 bits to fit the times 2 multiplication)
+    mtpcd_times_1     <= x_mtpcd(8) & x_mtpcd(8 downto 0);         -- Extend the sign bit
+    mtpcd_times_2     <= x_mtpcd(8 downto 0) & '0';                -- Shift left by 1
+    mtpcd_times_neg_1 <= '1' & std_logic_vector(-signed(x_mtpcd)); -- Negate the multiplier and extend the sign bit
+    mtpcd_times_neg_2 <= mtpcd_times_neg_1(8 downto 0) & '0';      -- Shift left by 1
 
     -- Find the partial products
     with blk_0 select partial_0 <=
@@ -117,10 +121,10 @@ begin
     end process write_rb;
 
     -- Extend the partial products to 16 bits for the adder
-    x_partial_0 <= reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8) & reg_bank(0)(8 downto 0); -- No Shift
-    x_partial_1 <= reg_bank(1)(8) & reg_bank(1)(8) & reg_bank(1)(8) & reg_bank(1)(8) & reg_bank(1)(8) & reg_bank(1)(8 downto 0) & "00";                            -- Shift left by 2^1
-    x_partial_2 <= reg_bank(2)(8) & reg_bank(2)(8) & reg_bank(2)(8) & reg_bank(2)(8 downto 0) & "0000";                                                            -- Shift left by 2^2
-    x_partial_3 <= reg_bank(3)(8) & reg_bank(3)(8 downto 0) & "000000";                                                                                            -- Shift left by 2^3
+    x_partial_0 <= reg_bank(0)(9) & reg_bank(0)(9) & reg_bank(0)(9) & reg_bank(0)(9) & reg_bank(0)(9) & reg_bank(0)(9) & reg_bank(0)(9 downto 0); -- No Shift
+    x_partial_1 <= reg_bank(1)(9) & reg_bank(1)(9) & reg_bank(1)(9) & reg_bank(1)(9) & reg_bank(1)(9 downto 0) & "00";                            -- Shift left by 2^1
+    x_partial_2 <= reg_bank(2)(9) & reg_bank(2)(9) & reg_bank(2)(9 downto 0) & "0000";                                                            -- Shift left by 2^2
+    x_partial_3 <= reg_bank(3)(9 downto 0) & "000000";                                                                                            -- Shift left by 2^3
 
     -- Add the partial products
     adder_inst : adder
