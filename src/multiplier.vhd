@@ -45,10 +45,14 @@ architecture behavior of multiplier is
     signal partial_1 : std_logic_vector(15 downto 0);
     signal partial_2 : std_logic_vector(15 downto 0);
     signal partial_3 : std_logic_vector(15 downto 0);
+
+    -- Results of the adders in the Wallace tree.
+    signal sum_0 : std_logic_vector(15 downto 0);
+    signal sum_1 : std_logic_vector(15 downto 0);
 begin
     -- Add a 0 on right and divide the "signed" into 4 blocks following radix-4
     -- Booth's algorithm.
-    blk_0 <= signed_value(1 downto 0) & '0'; -- Add a zero on the right (Booth's algorithm)
+    blk_0 <= signed_value(1 downto 0) & '0';
     blk_1 <= signed_value(3 downto 1);
     blk_2 <= signed_value(5 downto 3);
     blk_3 <= signed_value(7 downto 5);
@@ -112,14 +116,35 @@ begin
 
     -- Extend the "pre_partial"s (to enter the adders) and shift according to
     -- Booth's algorithm to make the partial products.
-    partial_0 <= pre_partial_0(9) & pre_partial_0(9) & pre_partial_0(9) & pre_partial_0(9) & pre_partial_0(9) & pre_partial_0(9) & pre_partial_0(9 downto 0); -- No Shift
-    partial_1 <= pre_partial_1(9) & pre_partial_1(9) & pre_partial_1(9) & pre_partial_1(9) & pre_partial_1(9 downto 0) & "00"; -- Shift left by 2^1
-    partial_2 <= pre_partial_2(9) & pre_partial_2(9) & pre_partial_2(9 downto 0) & "0000"; -- Shift left by 2^2
-    partial_3 <= pre_partial_3(9 downto 0) & "000000"; -- Shift left by 2^3
+    partial_0 <=
+        pre_partial_0(9) &
+        pre_partial_0(9) &
+        pre_partial_0(9) &
+        pre_partial_0(9) &
+        pre_partial_0(9) &
+        pre_partial_0(9) &
+        pre_partial_0(9 downto 0); -- No Shift
+    partial_1 <=
+        pre_partial_1(9) &
+        pre_partial_1(9) &
+        pre_partial_1(9) &
+        pre_partial_1(9) &
+        pre_partial_1(9 downto 0) & "00"; -- Shift left by 2^1
+    partial_2 <=
+        pre_partial_2(9) &
+        pre_partial_2(9) &
+        pre_partial_2(9 downto 0) & "0000"; -- Shift left by 2^2
+    partial_3 <=
+        pre_partial_3(9 downto 0) & "000000"; -- Shift left by 2^3
 
-
-    result <= std_logic_vector(
-        signed(partial_0) + signed(partial_1) + signed(partial_2) + signed(partial_3)
+    -- Add the partial products in a Wallace tree.
+    sum_0 <= std_logic_vector(
+        signed(partial_0) + signed(partial_1)
     );
-
+    sum_1 <= std_logic_vector(
+        signed(partial_2) + signed(partial_3)
+    );
+    result <= std_logic_vector(
+        signed(sum_0) + signed(sum_1)
+    );
 end architecture;
