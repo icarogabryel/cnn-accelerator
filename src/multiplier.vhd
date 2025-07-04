@@ -75,40 +75,40 @@ begin
 
     -- Find the "pre_partial"s corresponding to each block.
     with blk_0 select pre_partial_0 <=
-        (others => '0') when "000",     -- Times  0
-        unsigned_times_1 when "001",    -- Times  1
-        unsigned_times_1 when "010",    -- Times  1
-        unsigned_times_2 when "011",    -- Times  2
+        (others => '0')      when "000", -- Times  0
+        unsigned_times_1     when "001", -- Times  1
+        unsigned_times_1     when "010", -- Times  1
+        unsigned_times_2     when "011", -- Times  2
         unsigned_times_neg_2 when "100", -- Times -2
         unsigned_times_neg_1 when "101", -- Times -1
         unsigned_times_neg_1 when "110", -- Times -1
-        (others => '0') when others;    -- Times  0
+        (others => '0') when others;     -- Times  0
 
     with blk_1 select pre_partial_1 <=
-        (others => '0') when "000",
-        unsigned_times_1 when "001",
-        unsigned_times_1 when "010",
-        unsigned_times_2 when "011",
+        (others => '0')      when "000",
+        unsigned_times_1     when "001",
+        unsigned_times_1     when "010",
+        unsigned_times_2     when "011",
         unsigned_times_neg_2 when "100",
         unsigned_times_neg_1 when "101",
         unsigned_times_neg_1 when "110",
         (others => '0') when others;
 
     with blk_2 select pre_partial_2 <=
-        (others => '0') when "000",
-        unsigned_times_1 when "001",
-        unsigned_times_1 when "010",
-        unsigned_times_2 when "011",
+        (others => '0')      when "000",
+        unsigned_times_1     when "001",
+        unsigned_times_1     when "010",
+        unsigned_times_2     when "011",
         unsigned_times_neg_2 when "100",
         unsigned_times_neg_1 when "101",
         unsigned_times_neg_1 when "110",
         (others => '0') when others;
 
     with blk_3 select pre_partial_3 <=
-        (others => '0') when "000",
-        unsigned_times_1 when "001",
-        unsigned_times_1 when "010",
-        unsigned_times_2 when "011",
+        (others => '0')      when "000",
+        unsigned_times_1     when "001",
+        unsigned_times_1     when "010",
+        unsigned_times_2     when "011",
         unsigned_times_neg_2 when "100",
         unsigned_times_neg_1 when "101",
         unsigned_times_neg_1 when "110",
